@@ -1,0 +1,17 @@
+R
+node_modules
+*.pyc
+__pycache__
+!.gitignore
+*~
+.bash_history
+/venv/
+.cache/
+.ipython/
+.jupyter/
+.local/
+.pip/
+.ssh/
+.viminfo
+*.ipynb_checkpoints/
+.pylind.d/
