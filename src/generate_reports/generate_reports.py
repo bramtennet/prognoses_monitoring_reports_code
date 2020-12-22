@@ -85,10 +85,12 @@ def generate_report_marketparty_month(df_month, market_party, month):
             # make a plot for the connection point
             connectionpoint_plot(df_temp,i)
          
-        # =============================================================================
+       # =============================================================================
         # Generate the PDF report including all the plots 
         # =============================================================================
-        create_pdf(month, mp, list_conn)
+        conn_dict = dict(zip(df_month_party['Connection point Name'], df_month_party['Connection point EAN']))
+        
+        create_pdf(month, mp, list_conn, conn_dict)
         
 
 def generate_report_general_month(df_month, month):
@@ -177,7 +179,7 @@ def generate_report_general_year(df):
     
 
 
-def generate_report_tennet_month(df_month, month):
+def generate_report_internal_month(df_month, month):
     
     """This function generates a comparison report for all market parties for a specific month with visible names(intended for internal use only)
        
@@ -221,7 +223,7 @@ def generate_report_tennet_month(df_month, month):
 
 
 
-def generate_report_tennet_year(df):
+def generate_report_internal_year(df):
     
     """This function generates a comparison report for all market parties for a specific month with visible names(intended for internal use only)
        
@@ -262,117 +264,3 @@ def generate_report_tennet_year(df):
     # Generate the PDF report including all the plots 
     # =============================================================================
     create_pdf_tennet_year()
-
-
-def generate_report_tennet_wind_year(df):
-    
-    """This function generates a comparison report for all wind assets over the whole year with visible names(intended for internal use only)
-       
-       Parameters:
-       
-       df(df)         Dataframe of the indicated month 
-              
-       Returns:
-       The function returns no variables
-              
-    """
-    
-    ## Filter the dataframe by wind power generation
-    df = df[(df['Fuel Type'] == 'B19 = Wind Onshore') | (df['Fuel Type'] == 'B18 = Wind Offshore')]
-    
-        
-    # make a temporary dataframe grouped per market party calculating the mean
-    # and sort it by ABS error (DA)
-    df_temp = df.groupby(['Market Party Name']).mean()
-    
-       
-    # =============================================================================
-    # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
-    # =============================================================================
-    barchart_tennet_MAE(df_temp)
-    barchart_tennet_rMAE(df_temp)
-     
-    # =============================================================================
-    # Plot the distribution of errors
-    # =============================================================================    
-    dist_errors(df)
-            
-    # =============================================================================
-    # PLOT the MAE and rMAE during the month for both the ID and DA
-    # =============================================================================
-    plot_year(df, 'MAE')
-    plot_year(df, 'rMAE')
-        
-    
-    # =============================================================================
-    # Generate the PDF report including all the plots 
-    # =============================================================================
-    create_pdf_tennet_wind_year()
-
-def generate_report_tennet_wind_month(df_month, month):
-    
-    """This function generates a comparison report for all wind assets over a specific month with visible names(intended for internal use only)
-       
-       Parameters:
-       
-       df(df)         Dataframe of the indicated month 
-       month(int) :         An Integer which represent the month you would like to generate the report for (all months are now in 2020, januari = 1 etc.)
-       
-       Returns:
-       The function returns no variables
-              
-    """
-    
-    
-    ## Filter the dataframe by wind power generation
-    df_month = df_month[(df_month['Fuel Type'] == 'B19 = Wind Onshore') | (df_month['Fuel Type'] == 'B18 = Wind Offshore')]
-
-    
-    # make a temporary dataframe grouped per market party calculating the mean
-    # and sort it by ABS error (DA)
-    df_temp = df_month.groupby(['Market Party Name']).mean()
-            
-    # =============================================================================
-    # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
-    # =============================================================================
-    barchart_tennet_MAE(df_temp)
-    barchart_tennet_rMAE(df_temp)
-     
-    # =============================================================================
-    # Plot the distribution of errors
-    # =============================================================================    
-    dist_errors(df_month)
-            
-    
-    # =============================================================================
-    # PLOT the MAE and rMAE during the month for both the ID and DA
-    # =============================================================================
-    MAE_marketparty_month(df_month)
-    rMAE_marketparty_month(df_month)
-        
-    # sort the dataframe by connection point to feed into the plotting functions
-    df_temp = df_month.groupby(['Connection point Name']).mean()
-    
-    five_conn_MAE(df_temp)
-    five_conn_rMAE(df_temp)
-    
-    
-    # =============================================================================
-    # PLOT the MAE and rMAE in one graph during the month for both the ID and DA for each connection point
-    # And add the error distribution of this same connection point to the plot
-    # =============================================================================
-    list_conn = df_month['Connection point Name'].unique()
-    
-    for i in range(len(list_conn)):
-        print('Processing: ' +' : ' +str(list_conn[i]))
-        
-        # filter the dataframe based on the connection point to make a connectionpoint specific plot
-        df_temp = df_month[df_month['Connection point Name'] == list_conn[i]]
-        
-        # make a plot for the connection point
-        connectionpoint_plot(df_temp,i)
-     
-    # =============================================================================
-    # Generate the PDF report including all the plots 
-    # =============================================================================
-    create_pdf_tennet_wind_month(month, list_conn)

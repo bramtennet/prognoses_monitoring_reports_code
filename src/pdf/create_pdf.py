@@ -9,7 +9,7 @@ from fpdf import FPDF
 from slugify import slugify
 import calendar
 
-def create_pdf(month, mp, list_conn):
+def create_pdf(month, mp, list_conn, conn_dict):
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
     pdf.set_xy(0, 0)
@@ -38,12 +38,13 @@ def create_pdf(month, mp, list_conn):
     
     for i in range(len(list_conn)):
         pdf.set_font('arial', 'B', 8)
-        pdf.cell(75, 10, str(list_conn[i]), 0, 2)
+        pdf.cell(75, 10, str(list_conn[i]) + ' - EAN: ' + str(conn_dict[list_conn[i]]), 0, 2)
         pdf.image('../reports/figures/connectionpoint_'+str(i)+'.png', x = 10, y = None, w = 180, h = 0, type = '', link = '')
         if (((i+1) % 3 == 0) and (i != range(len(list_conn))[-1])):
             pdf.add_page()
         
     pdf.output('../reports/prognosis_report_'+str(slugify(mp))+'_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
+    
     
 
 

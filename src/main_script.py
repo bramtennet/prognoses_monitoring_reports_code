@@ -6,12 +6,12 @@ Make sure you have installed the slugify package which can be installed via the 
 """
 
 
-from data.make_dataset import make_dataset, update_dataset
-from generate_reports.generate_reports import generate_report_marketparty_month, generate_report_general_month, generate_report_general_year, generate_report_tennet_month, generate_report_tennet_year, generate_report_tennet_wind_year,generate_report_tennet_wind_month
+from data.make_dataset import make_dataset
+from generate_reports.generate_reports import generate_report_marketparty_month, generate_report_general_month, generate_report_general_year, generate_report_internal_month, generate_report_internal_year
 
 
 
-def main(month=9, market_party=None, update_data=False, report_type= 'marketparty_month'):
+def main(month=8, market_party=None, report_type= 'marketparty_month', data_file_location= '../data/dummy_data.csv'):
     
     """With this main function you are able to generate prognosis monitoring reports for individual or all market parties for a specific month
        
@@ -28,54 +28,62 @@ def main(month=9, market_party=None, update_data=False, report_type= 'marketpart
                             'tennet_year': generates a report which overviews all market parties during the entire year (market party names are visible), this document is intended for internal purpose only
                             'tennet_wind_month':generates a report which overviews all wind assets during the indicated month (market party names are visible), this document is intended for internal purposes
                             'tennet_wind_year':generates a report which overviews all wind assets during the entire year (market party names are visible), this document is intended for internal purpose only
+       data_file_location:  Indicates the location of the datafile which is used for making the reports. By default a dummy data file is in place which can be used to run the script (dummy_data.csv).
+                            The dummy file can be used as a template to put your own prognosis and measuring data.
+       
        Returns:
        The function returns no variables
               
     """
 
-    #### Update the CSV file from all the individual excel files
-    if update_data == True:
-        update_dataset()
-    
-    
     #### If no month is specified generate the dataset for all months
     if month == None:
-        df = make_dataset(month)
+        df = make_dataset(month, data_file_location)
     
     #### Preproces the data for the given month
     else:
-        df_month = make_dataset(month)
+        df_month = make_dataset(month, data_file_location)
     
     
     ## generate a report based on report type
     if report_type == 'marketparty_month':
-        generate_report_marketparty_month(df_month, market_party, month)
-         
+        if month in range(1,13):
+            generate_report_marketparty_month(df_month, market_party, month)
+        else:
+            raise Exception("Indicate a month with a number between 1 and 12")
+            
     
     ## generate general reports supervising the entire market but which are anonymized
     elif report_type == 'general_month':
-        generate_report_general_month(df_month, month)
-
+        if (month in range(1,13)) & (market_party == None):
+            generate_report_general_month(df_month, month)
+        else:
+            raise Exception("Indicate a month with a number between 1 and 12 and make sure market_party=None")
     
     elif report_type == 'general_year':
-        generate_report_general_year(df)
+        if (month == None) & (market_party == None):
+            generate_report_general_year(df)
+        else:
+            raise Exception("Set month=None and market_party=None as you want to generate a report for the whole year for all market parties")
 
-    ## generate general reports supervising the entire market but which are for TenneT usage only
-    elif report_type == 'tennet_month':
-        generate_report_tennet_month(df_month, month)
-
-    
-    elif report_type == 'tennet_year':
-        generate_report_tennet_year(df)
+    ## generate general reports supervising the entire market but which are for internal usage only as they do not disclose market party names
+    elif report_type == 'internal_month':
+        if  (month in range(1,13)) & (market_party == None):
+            generate_report_internal_month(df_month, month)
+        else:
+            raise Exception("Indicate a month with a number between 1 and 12 and make sure market_party=None")
+     
+    elif report_type == 'internal_year':
+        if (month == None) & (market_party == None):
+            generate_report_internal_year(df)
+        else:
+            raise Exception("Set month=None and market_party=None as you want to generate a report for the whole year for all market parties")
         
+        
+        
+        
+
     
-    elif report_type == 'tennet_wind_month':
-        generate_report_tennet_wind_month(df_month,month)
-    
-    elif report_type == 'tennet_wind_year':
-        generate_report_tennet_wind_year(df)
-    
-   
 if __name__ == "__main__":
     main()
     
