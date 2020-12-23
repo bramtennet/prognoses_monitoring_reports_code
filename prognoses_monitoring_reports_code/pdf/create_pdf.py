@@ -9,6 +9,7 @@ from fpdf import FPDF
 from slugify import slugify
 import calendar
 
+
 def create_pdf(month, mp, list_conn, conn_dict):
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -20,32 +21,40 @@ def create_pdf(month, mp, list_conn, conn_dict):
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance on market party level", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/MAE_marketparty_month.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/rMAE_marketparty_month.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/MAE_five_connectionpoints.png', x = 10, y = 220, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/rMAE_five_connectionpoints.png', x = 105, y = 220, w = 90, h = 0, type = '', link = '')
- 
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/MAE_marketparty_month.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/rMAE_marketparty_month.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+    pdf.image('../reports/figures/MAE_five_connectionpoints.png',
+              x=10, y=220, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/rMAE_five_connectionpoints.png',
+              x=105, y=220, w=90, h=0, type='', link='')
+
     pdf.add_page()
     pdf.set_xy(0, 0)
     pdf.set_font('arial', 'B', 16)
     pdf.cell(90, 10, " ", 0, 2, 'C')
     pdf.cell(10)
     pdf.cell(75, 10, "Forecast performance on connection point level ", 0, 2)
-    
+
     for i in range(len(list_conn)):
         pdf.set_font('arial', 'B', 8)
-        pdf.cell(75, 10, str(list_conn[i]) + ' - EAN: ' + str(conn_dict[list_conn[i]]), 0, 2)
-        pdf.image('../reports/figures/connectionpoint_'+str(i)+'.png', x = 10, y = None, w = 180, h = 0, type = '', link = '')
+        pdf.cell(75, 10, str(list_conn[i]) + ' - EAN: ' +
+                 str(conn_dict[list_conn[i]]), 0, 2)
+        pdf.image('../reports/figures/connectionpoint_'+str(i) +
+                  '.png', x=10, y=None, w=180, h=0, type='', link='')
         if (((i+1) % 3 == 0) and (i != range(len(list_conn))[-1])):
             pdf.add_page()
-        
-    pdf.output('../reports/prognosis_report_'+str(slugify(mp))+'_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
-    
-    
+
+    pdf.output('../reports/prognosis_report_'+str(slugify(mp)) +
+               '_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
 
 
 def create_pdf_general_month(month):
@@ -55,19 +64,26 @@ def create_pdf_general_month(month):
     pdf.set_font('arial', 'B', 16)
     pdf.cell(90, 10, " ", 0, 2, 'C')
     pdf.cell(10)
-    pdf.cell(75, 10, "Prognosis monitoring report of all market parties during " + str(calendar.month_name[month]) + ' 2020', 0, 2)
+    pdf.cell(75, 10, "Prognosis monitoring report of all market parties during " +
+             str(calendar.month_name[month]) + ' 2020', 0, 2)
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance on market party level", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/MAE_marketparty_month.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/rMAE_marketparty_month.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    
-    pdf.output('../reports/general_prognosis_report_'+'_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
-    
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/MAE_marketparty_month.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/rMAE_marketparty_month.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+
+    pdf.output('../reports/general_prognosis_report_' +
+               '_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
+
 
 def create_pdf_general_year():
     pdf = FPDF('P', 'mm', 'A4')
@@ -80,16 +96,21 @@ def create_pdf_general_year():
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance on market party level", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/plot_year_MAE.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/plot_year_rMAE.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/plot_year_MAE.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/plot_year_rMAE.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+
     pdf.output('../reports/general_prognosis_report_2020.pdf', 'F')
-    
-    
+
+
 def create_pdf_tennet_month(month):
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -97,19 +118,27 @@ def create_pdf_tennet_month(month):
     pdf.set_font('arial', 'B', 16)
     pdf.cell(90, 10, " ", 0, 2, 'C')
     pdf.cell(10)
-    pdf.cell(75, 10, "Prognosis monitoring report of all market parties during " + str(calendar.month_name[month]) + ' 2020', 0, 2)
+    pdf.cell(75, 10, "Prognosis monitoring report of all market parties during " +
+             str(calendar.month_name[month]) + ' 2020', 0, 2)
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance over all market parties", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/MAE_marketparty_month.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/rMAE_marketparty_month.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    
-    pdf.output('../reports/tennet_internal_prognosis_report_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
-    
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/MAE_marketparty_month.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/rMAE_marketparty_month.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+
+    pdf.output('../reports/tennet_internal_prognosis_report_2020_' +
+               str('{:02}'.format(month))+'.pdf', 'F')
+
+
 def create_pdf_tennet_year():
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -121,15 +150,21 @@ def create_pdf_tennet_year():
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance over all market parties", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/plot_year_MAE.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/plot_year_rMAE.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/plot_year_MAE.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/plot_year_rMAE.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+
     pdf.output('../reports/tennet_internal_prognosis_report_2020.pdf', 'F')
-    
+
+
 def create_pdf_tennet_wind_year():
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -141,15 +176,21 @@ def create_pdf_tennet_wind_year():
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance over all market parties", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/plot_year_MAE.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/plot_year_rMAE.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/plot_year_MAE.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/plot_year_rMAE.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+
     pdf.output('../reports/tennet_internal_wind_prognosis_report_2020.pdf', 'F')
-    
+
+
 def create_pdf_tennet_wind_month(month, list_conn):
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
@@ -157,31 +198,41 @@ def create_pdf_tennet_wind_month(month, list_conn):
     pdf.set_font('arial', 'B', 16)
     pdf.cell(90, 10, " ", 0, 2, 'C')
     pdf.cell(10)
-    pdf.cell(75, 10, "Prognosis monitoring report only including wind assets during " + str(calendar.month_name[month]) + ' 2020', 0, 2)
+    pdf.cell(75, 10, "Prognosis monitoring report only including wind assets during " +
+             str(calendar.month_name[month]) + ' 2020', 0, 2)
     pdf.cell(30, 10, " ", 0, 2, 'C')
     pdf.set_font('arial', 'B', 12)
     pdf.cell(75, 10, "Forecasting performance over all market parties", 0, 2)
-    
-    pdf.image('../reports/figures/barchart_marketparty_MAE.png', x = 10, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/barchart_marketparty_rMAE.png', x = 105, y = 40, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/MAE_marketparty_month.png', x = 10, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/rMAE_marketparty_month.png', x = 105, y = 102, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/dist_errors.png', x = 10, y = 160, w = 180, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/MAE_five_connectionpoints.png', x = 10, y = 220, w = 90, h = 0, type = '', link = '')
-    pdf.image('../reports/figures/rMAE_five_connectionpoints.png', x = 105, y = 220, w = 90, h = 0, type = '', link = '')
- 
+
+    pdf.image('../reports/figures/barchart_marketparty_MAE.png',
+              x=10, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/barchart_marketparty_rMAE.png',
+              x=105, y=40, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/MAE_marketparty_month.png',
+              x=10, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/rMAE_marketparty_month.png',
+              x=105, y=102, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/dist_errors.png',
+              x=10, y=160, w=180, h=0, type='', link='')
+    pdf.image('../reports/figures/MAE_five_connectionpoints.png',
+              x=10, y=220, w=90, h=0, type='', link='')
+    pdf.image('../reports/figures/rMAE_five_connectionpoints.png',
+              x=105, y=220, w=90, h=0, type='', link='')
+
     pdf.add_page()
     pdf.set_xy(0, 0)
     pdf.set_font('arial', 'B', 16)
     pdf.cell(90, 10, " ", 0, 2, 'C')
     pdf.cell(10)
     pdf.cell(75, 10, "Forecast performance on connection point level ", 0, 2)
-    
+
     for i in range(len(list_conn)):
         pdf.set_font('arial', 'B', 8)
         pdf.cell(75, 10, str(list_conn[i]), 0, 2)
-        pdf.image('../reports/figures/connectionpoint_'+str(i)+'.png', x = 10, y = None, w = 180, h = 0, type = '', link = '')
+        pdf.image('../reports/figures/connectionpoint_'+str(i) +
+                  '.png', x=10, y=None, w=180, h=0, type='', link='')
         if (((i+1) % 3 == 0) and (i != range(len(list_conn))[-1])):
             pdf.add_page()
-        
-    pdf.output('../reports/tennet_internal_wind_prognosis_report_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
+
+    pdf.output('../reports/tennet_internal_wind_prognosis_report_2020_' +
+               str('{:02}'.format(month))+'.pdf', 'F')
