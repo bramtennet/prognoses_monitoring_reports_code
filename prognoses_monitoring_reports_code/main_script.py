@@ -6,8 +6,8 @@ Make sure you have installed the slugify package which can be installed via the 
 """
 
 
-from data.make_dataset import make_dataset
-from generate_reports.generate_reports import generate_report_marketparty_month, generate_report_general_month, generate_report_general_year, generate_report_internal_month, generate_report_internal_year
+from prognoses_monitoring_reports_code.data.make_dataset import make_dataset
+from prognoses_monitoring_reports_code.generate_reports.generate_reports import generate_report_marketparty_month, generate_report_general_month, generate_report_general_year, generate_report_internal_month, generate_report_internal_year
 
 
 
