@@ -1,9 +1,10 @@
 R
 node_modules
 *.pyc
-__pycache__
+__pycache__/
 !.gitignore
 *~
+.idea
 .bash_history
 /venv/
 .cache/
