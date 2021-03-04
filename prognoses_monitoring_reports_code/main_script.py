@@ -10,7 +10,7 @@ from prognoses_monitoring_reports_code.data.make_dataset import make_dataset
 from prognoses_monitoring_reports_code.generate_reports.generate_reports import generate_report_marketparty_month, generate_report_general_month, generate_report_general_year, generate_report_internal_month, generate_report_internal_year
 
 
-def main(month=8, market_party=None, report_type='marketparty_month', data_file_location='../data/dummy_data.csv'):
+def main(month=8, market_party=None, report_type='marketparty_month', data_file_location='../data/dummy_data.csv', reports_output_folder = '../reports'):
     """With this main function you are able to generate prognosis monitoring reports for individual or all market parties for a specific month
 
        Parameters:
@@ -34,6 +34,8 @@ def main(month=8, market_party=None, report_type='marketparty_month', data_file_
 
     """
 
+
+
     # If no month is specified generate the dataset for all months
     if month == None:
         df = make_dataset(month, data_file_location)
@@ -45,21 +47,21 @@ def main(month=8, market_party=None, report_type='marketparty_month', data_file_
     # generate a report based on report type
     if report_type == 'marketparty_month':
         if month in range(1, 13):
-            generate_report_marketparty_month(df_month, market_party, month)
+            generate_report_marketparty_month(df_month, market_party, month, reports_output_folder)
         else:
             raise Exception("Indicate a month with a number between 1 and 12")
 
     # generate general reports supervising the entire market but which are anonymized
     elif report_type == 'general_month':
         if (month in range(1, 13)) & (market_party == None):
-            generate_report_general_month(df_month, month)
+            generate_report_general_month(df_month, month, reports_output_folder)
         else:
             raise Exception(
                 "Indicate a month with a number between 1 and 12 and make sure market_party=None")
 
     elif report_type == 'general_year':
         if (month == None) & (market_party == None):
-            generate_report_general_year(df)
+            generate_report_general_year(df, reports_output_folder)
         else:
             raise Exception(
                 "Set month=None and market_party=None as you want to generate a report for the whole year for all market parties")
@@ -67,14 +69,14 @@ def main(month=8, market_party=None, report_type='marketparty_month', data_file_
     # generate general reports supervising the entire market but which are for internal usage only as they do not disclose market party names
     elif report_type == 'internal_month':
         if (month in range(1, 13)) & (market_party == None):
-            generate_report_internal_month(df_month, month)
+            generate_report_internal_month(df_month, month, reports_output_folder)
         else:
             raise Exception(
                 "Indicate a month with a number between 1 and 12 and make sure market_party=None")
 
     elif report_type == 'internal_year':
         if (month == None) & (market_party == None):
-            generate_report_internal_year(df)
+            generate_report_internal_year(df, reports_output_folder)
         else:
             raise Exception(
                 "Set month=None and market_party=None as you want to generate a report for the whole year for all market parties")

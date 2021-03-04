@@ -9,7 +9,9 @@ from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
 import string
 
 
-def barchart_marketparty_MAE(df_temp, mp=None):
+reports_output_folder = '../reports'
+
+def barchart_marketparty_MAE(df_temp, reports_output_folder, mp=None):
     """ Makes a barchart which compares the marketparties on MAE """
 
     df_temp = df_temp.sort_values(by='ABS Error (DA)')
@@ -63,10 +65,10 @@ def barchart_marketparty_MAE(df_temp, mp=None):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/barchart_marketparty_MAE.png')
+    plt.savefig(reports_output_folder + '/figures/barchart_marketparty_MAE.png')
 
 
-def barchart_marketparty_rMAE(df_temp, mp=None):
+def barchart_marketparty_rMAE(df_temp, reports_output_folder, mp=None):
     df_temp = df_temp.sort_values(by='relative ABS Error (DA)')
 
     index = np.arange(len(df_temp.index))
@@ -119,10 +121,10 @@ def barchart_marketparty_rMAE(df_temp, mp=None):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/barchart_marketparty_rMAE.png')
+    plt.savefig(reports_output_folder + '/figures/barchart_marketparty_rMAE.png')
 
 
-def barchart_tennet_MAE(df_temp):
+def barchart_tennet_MAE(df_temp, reports_output_folder):
     """ Makes a barchart which compares the marketparties on MAE """
 
     df_temp = df_temp.sort_values(by='ABS Error (DA)')
@@ -154,10 +156,10 @@ def barchart_tennet_MAE(df_temp):
 
     plt.legend()
     plt.tight_layout()
-    plt.savefig('../reports/figures/barchart_marketparty_MAE.png')
+    plt.savefig(reports_output_folder + '/figures/barchart_marketparty_MAE.png')
 
 
-def barchart_tennet_rMAE(df_temp):
+def barchart_tennet_rMAE(df_temp, reports_output_folder):
     """ Makes a barchart which compares the marketparties on MAE """
 
     df_temp = df_temp.sort_values(by='relative ABS Error (DA)')
@@ -189,10 +191,10 @@ def barchart_tennet_rMAE(df_temp):
 
     plt.legend()
     plt.tight_layout()
-    plt.savefig('../reports/figures/barchart_marketparty_rMAE.png')
+    plt.savefig(reports_output_folder + '/figures/barchart_marketparty_rMAE.png')
 
 
-def dist_errors(df_month_party):
+def dist_errors(df_month_party, reports_output_folder):
     fig = plt.figure(figsize=[12.8, 4])
 
     plt.hist([df_month_party['Error (DA)'].dropna(),
@@ -202,10 +204,10 @@ def dist_errors(df_month_party):
     plt.ylabel('Frequency')
     plt.xlabel('Error [MW]')
     plt.tight_layout()
-    plt.savefig('../reports/figures/dist_errors.png')
+    plt.savefig(reports_output_folder + '/figures/dist_errors.png')
 
 
-def five_conn_MAE(df_temp):
+def five_conn_MAE(df_temp, reports_output_folder):
 
     df_temp_MAE = df_temp.sort_values(by='ABS Error (DA)', ascending=False)
     df_temp_MAE = df_temp_MAE[:5]
@@ -235,11 +237,11 @@ def five_conn_MAE(df_temp):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/MAE_five_connectionpoints.png')
+    plt.savefig(reports_output_folder + '/figures/MAE_five_connectionpoints.png')
     plt.close('all')
 
 
-def five_conn_rMAE(df_temp):
+def five_conn_rMAE(df_temp, reports_output_folder):
 
     df_temp_rMAE = df_temp.sort_values(by='relative ABS Error (DA)', ascending=False)
     df_temp_rMAE = df_temp_rMAE[:5]
@@ -268,17 +270,18 @@ def five_conn_rMAE(df_temp):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/rMAE_five_connectionpoints.png')
+    plt.savefig(reports_output_folder + '/figures/rMAE_five_connectionpoints.png')
     plt.close('all')
 
 
-def MAE_marketparty_month(df_month_party):
+def MAE_marketparty_month(df_month_party, reports_output_folder):
     df_temp = df_month_party.groupby(['Business day']).mean()
     fig = plt.figure()
-    plt.plot(df_temp['ABS Error (DA)'].dropna(), label='DA', marker='o', color='b')
-    plt.plot(df_temp['ABS Error (ID)'].dropna(), label='ID', marker='o', color='g')
-
     ax1 = plt.axes()
+    ax1.plot(df_temp['ABS Error (DA)'].dropna(), label='DA', marker='o', color='b')
+    ax1.plot(df_temp['ABS Error (ID)'].dropna(), label='ID', marker='o', color='g')
+
+
     if len(df_temp['ABS Error (DA)'].dropna()) > 5:
         ax1.xaxis.set_major_locator(MultipleLocator(5))
         ax1.xaxis.set_minor_locator(AutoMinorLocator(5))
@@ -293,19 +296,20 @@ def MAE_marketparty_month(df_month_party):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/MAE_marketparty_month.png')
+    plt.savefig(reports_output_folder + '/figures/MAE_marketparty_month.png')
     plt.close('all')
 
 
-def rMAE_marketparty_month(df_month_party):
+def rMAE_marketparty_month(df_month_party, reports_output_folder):
     df_temp = df_month_party.groupby(['Business day']).mean()
     fig = plt.figure()
-    plt.plot(df_temp['relative ABS Error (DA)'].dropna(),
+    ax1 = plt.axes()
+    ax1.plot(df_temp['relative ABS Error (DA)'].dropna(),
              label='DA', marker='o', color='b')
-    plt.plot(df_temp['relative ABS Error (ID)'].dropna(),
+    ax1.plot(df_temp['relative ABS Error (ID)'].dropna(),
              label='ID', marker='o', color='g')
 
-    ax1 = plt.axes()
+
     if len(df_temp['ABS Error (DA)'].dropna()) > 5:
         ax1.xaxis.set_major_locator(MultipleLocator(5))
         ax1.xaxis.set_minor_locator(AutoMinorLocator(5))
@@ -320,11 +324,11 @@ def rMAE_marketparty_month(df_month_party):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/rMAE_marketparty_month.png')
+    plt.savefig(reports_output_folder + '/figures/rMAE_marketparty_month.png')
     plt.close('all')
 
 
-def connectionpoint_plot(df_temp, i):
+def connectionpoint_plot(df_temp, i, reports_output_folder):
     df_temp_bd = df_temp.groupby(['Business day']).mean()
 
     fig = plt.figure(figsize=[12.8, 4.8])
@@ -371,11 +375,11 @@ def connectionpoint_plot(df_temp, i):
 
     plt.tight_layout()
 
-    plt.savefig('../reports/figures/connectionpoint_'+str(i)+'.png')
+    plt.savefig(reports_output_folder + '/figures/connectionpoint_'+str(i)+'.png')
     plt.close('all')
 
 
-def plot_year(df, metric):
+def plot_year(df, metric, reports_output_folder):
 
     if metric == 'MAE':
         columnname_da = 'ABS Error (DA)'
@@ -423,5 +427,5 @@ def plot_year(df, metric):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('../reports/figures/plot_year_' + str(metric) + '.png')
+    plt.savefig(reports_output_folder + '/figures/plot_year_' + str(metric) + '.png')
     plt.close('all')
