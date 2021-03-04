@@ -9,7 +9,7 @@ from prognoses_monitoring_reports_code.visualisation.visualise import barchart_m
 from prognoses_monitoring_reports_code.pdf.create_pdf import create_pdf, create_pdf_general_month, create_pdf_general_year, create_pdf_tennet_month, create_pdf_tennet_year, create_pdf_tennet_wind_month, create_pdf_tennet_wind_year
 
 
-def generate_report_marketparty_month(df_month, market_party, month):
+def generate_report_marketparty_month(df_month, market_party, month, reports_output_folder):
     """This function generates a report of an individual market party (if indicated) or reports for all market parties (if market_party = None) for a specific month
 
        Parameters:
@@ -39,8 +39,8 @@ def generate_report_marketparty_month(df_month, market_party, month):
         # =============================================================================
         # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
         # =============================================================================
-        barchart_marketparty_MAE(df_temp, mp)
-        barchart_marketparty_rMAE(df_temp, mp)
+        barchart_marketparty_MAE(df_temp, reports_output_folder, mp)
+        barchart_marketparty_rMAE(df_temp, reports_output_folder, mp)
 
         # =============================================================================
         # Filter the dataframe for only the selected market party
@@ -50,7 +50,7 @@ def generate_report_marketparty_month(df_month, market_party, month):
         # =============================================================================
         # Plot the distribution of errors
         # =============================================================================
-        dist_errors(df_month_party)
+        dist_errors(df_month_party, reports_output_folder)
 
         # =============================================================================
         # Plot the MAE and rMAE of the five connection points with the highest MAE and rMAE
@@ -59,14 +59,14 @@ def generate_report_marketparty_month(df_month, market_party, month):
         # sort the dataframe by connection point to feed into the plotting functions
         df_temp = df_month_party.groupby(['Connection point Name']).mean()
 
-        five_conn_MAE(df_temp)
-        five_conn_rMAE(df_temp)
+        five_conn_MAE(df_temp, reports_output_folder)
+        five_conn_rMAE(df_temp, reports_output_folder)
 
         # =============================================================================
         # PLOT the MAE and rMAE during the month for both the ID and DA
         # =============================================================================
-        MAE_marketparty_month(df_month_party)
-        rMAE_marketparty_month(df_month_party)
+        MAE_marketparty_month(df_month_party, reports_output_folder)
+        rMAE_marketparty_month(df_month_party, reports_output_folder)
 
         # =============================================================================
         # PLOT the MAE and rMAE in one graph during the month for both the ID and DA for each connection point
@@ -82,7 +82,7 @@ def generate_report_marketparty_month(df_month, market_party, month):
                                      == list_conn[i]]
 
             # make a plot for the connection point
-            connectionpoint_plot(df_temp, i)
+            connectionpoint_plot(df_temp, i, reports_output_folder)
 
        # =============================================================================
         # Generate the PDF report including all the plots
@@ -90,10 +90,10 @@ def generate_report_marketparty_month(df_month, market_party, month):
         conn_dict = dict(
             zip(df_month_party['Connection point Name'], df_month_party['Connection point EAN']))
 
-        create_pdf(month, mp, list_conn, conn_dict)
+        create_pdf(month, mp, list_conn, conn_dict, reports_output_folder)
 
 
-def generate_report_general_month(df_month, month):
+def generate_report_general_month(df_month, month, reports_output_folder):
     """This function generates a comparison report for all market parties for a specific month with anonymized names
 
        Parameters:
@@ -113,27 +113,27 @@ def generate_report_general_month(df_month, month):
     # =============================================================================
     # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
     # =============================================================================
-    barchart_marketparty_MAE(df_temp)
-    barchart_marketparty_rMAE(df_temp)
+    barchart_marketparty_MAE(df_temp, reports_output_folder)
+    barchart_marketparty_rMAE(df_temp, reports_output_folder)
 
     # =============================================================================
     # Plot the distribution of errors
     # =============================================================================
-    dist_errors(df_month)
+    dist_errors(df_month, reports_output_folder)
 
     # =============================================================================
     # PLOT the MAE and rMAE during the month for both the ID and DA
     # =============================================================================
-    MAE_marketparty_month(df_month)
-    rMAE_marketparty_month(df_month)
+    MAE_marketparty_month(df_month, reports_output_folder)
+    rMAE_marketparty_month(df_month, reports_output_folder)
 
     # =============================================================================
     # Generate the PDF report including all the plots
     # =============================================================================
-    create_pdf_general_month(month)
+    create_pdf_general_month(month, reports_output_folder)
 
 
-def generate_report_general_year(df):
+def generate_report_general_year(df, reports_output_folder):
     """This function generates a comparison report for all market parties for a specific month with visible names(intended for internal use only)
 
        Parameters:
@@ -152,19 +152,19 @@ def generate_report_general_year(df):
     # =============================================================================
     # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
     # =============================================================================
-    barchart_marketparty_MAE(df_temp)
-    barchart_marketparty_rMAE(df_temp)
+    barchart_marketparty_MAE(df_temp, reports_output_folder)
+    barchart_marketparty_rMAE(df_temp, reports_output_folder)
 
     # =============================================================================
     # Plot the distribution of errors
     # =============================================================================
-    dist_errors(df)
+    dist_errors(df, reports_output_folder)
 
     # =============================================================================
     # PLOT the MAE and rMAE during the month for both the ID and DA
     # =============================================================================
-    plot_year(df, 'MAE')
-    plot_year(df, 'rMAE')
+    plot_year(df, 'MAE', reports_output_folder)
+    plot_year(df, 'rMAE', reports_output_folder)
 
     # =============================================================================
     # Generate the PDF report including all the plots
@@ -172,7 +172,7 @@ def generate_report_general_year(df):
     create_pdf_general_year()
 
 
-def generate_report_internal_month(df_month, month):
+def generate_report_internal_month(df_month, month, reports_output_folder):
     """This function generates a comparison report for all market parties for a specific month with visible names(intended for internal use only)
 
        Parameters:
@@ -192,8 +192,8 @@ def generate_report_internal_month(df_month, month):
     # =============================================================================
     # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
     # =============================================================================
-    barchart_tennet_MAE(df_temp)
-    barchart_tennet_rMAE(df_temp)
+    barchart_tennet_MAE(df_temp, reports_output_folder)
+    barchart_tennet_rMAE(df_temp, reports_output_folder)
 
     # =============================================================================
     # Plot the distribution of errors
@@ -203,16 +203,16 @@ def generate_report_internal_month(df_month, month):
     # =============================================================================
     # PLOT the MAE and rMAE during the month for both the ID and DA
     # =============================================================================
-    MAE_marketparty_month(df_month)
-    rMAE_marketparty_month(df_month)
+    MAE_marketparty_month(df_month, reports_output_folder)
+    rMAE_marketparty_month(df_month, reports_output_folder)
 
     # =============================================================================
     # Generate the PDF report including all the plots
     # =============================================================================
-    create_pdf_tennet_month(month)
+    create_pdf_tennet_month(month, reports_output_folder)
 
 
-def generate_report_internal_year(df):
+def generate_report_internal_year(df, reports_output_folder):
     """This function generates a comparison report for all market parties for a specific month with visible names(intended for internal use only)
 
        Parameters:
@@ -232,21 +232,21 @@ def generate_report_internal_year(df):
     # =============================================================================
     # Plot a Comparison of the MAE and rMAE for all marketparties indicating performance of current mp
     # =============================================================================
-    barchart_tennet_MAE(df_temp)
-    barchart_tennet_rMAE(df_temp)
+    barchart_tennet_MAE(df_temp, reports_output_folder)
+    barchart_tennet_rMAE(df_temp, reports_output_folder)
 
     # =============================================================================
     # Plot the distribution of errors
     # =============================================================================
-    dist_errors(df)
+    dist_errors(df, reports_output_folder)
 
     # =============================================================================
     # PLOT the MAE and rMAE during the month for both the ID and DA
     # =============================================================================
-    plot_year(df, 'MAE')
-    plot_year(df, 'rMAE')
+    plot_year(df, 'MAE', reports_output_folder)
+    plot_year(df, 'rMAE', reports_output_folder)
 
     # =============================================================================
     # Generate the PDF report including all the plots
     # =============================================================================
-    create_pdf_tennet_year()
+    create_pdf_tennet_year(reports_output_folder)
