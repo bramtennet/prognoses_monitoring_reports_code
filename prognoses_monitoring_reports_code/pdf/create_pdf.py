@@ -112,7 +112,7 @@ def create_pdf_general_year(reports_output_folder):
     pdf.output(reports_output_folder + '/general_prognosis_report_2020.pdf', 'F')
 
 
-def create_pdf_tennet_month(month):
+def create_pdf_tennet_month(month, reports_output_folder):
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
     pdf.set_xy(0, 0)

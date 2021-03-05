@@ -198,7 +198,7 @@ def generate_report_internal_month(df_month, month, reports_output_folder):
     # =============================================================================
     # Plot the distribution of errors
     # =============================================================================
-    dist_errors(df_month)
+    dist_errors(df_month, reports_output_folder)
 
     # =============================================================================
     # PLOT the MAE and rMAE during the month for both the ID and DA
