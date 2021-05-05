@@ -194,6 +194,69 @@ def barchart_tennet_rMAE(df_temp, reports_output_folder):
     plt.savefig(reports_output_folder + '/figures/barchart_marketparty_rMAE.png')
 
 
+def completeness_plot_month(df_month, reports_output_folder):
+
+
+    completeness = pd.DataFrame(
+        df_month.groupby(by='Connection point EAN').count()['PTE (15min)']).rename(
+        columns={'PTE (15min)': 'recieved'})
+    completeness['expected'] = len(
+        pd.date_range(df_month.index.min(), df_month.index.max(), freq='15T'))
+
+    x = np.arange(len(completeness.index))  # the label locations
+    width = 0.35  # the width of the bars
+    opacity = 0.8
+    fig, ax = plt.subplots(figsize=[12.8, 4])
+    rects1 = ax.bar(x - width / 2, completeness.recieved.to_list(), width,
+                    alpha=opacity,
+                    color='b',
+                    label='recieved')
+    rects2 = ax.bar(x + width / 2, completeness.expected.to_list(), width,
+                    alpha=opacity,
+                    color='g',
+                    label='expected')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    plt.title('Completeness per EAN')
+    ax.set_ylabel("Number of PTU's")
+    ax.set_xticks(x)
+    ax.set_xticklabels(completeness.index.to_list())
+    ax.legend()
+
+    def autolabel(rects):
+        """Attach a text label above each bar in *rects*, displaying its height."""
+        for rect in rects:
+            height = rect.get_height()
+
+    autolabel(rects1)
+    autolabel(rects2)
+    ax.set_xticklabels(completeness.index.to_list(), rotation=40, ha='right')
+
+    fig.tight_layout()
+    plt.savefig(reports_output_folder + '/figures/completeness_month.png')
+
+
+def completeness_time_month(df_month, EAN, mp, reports_output_folder):
+
+
+    time_combined = \
+    df_month[df_month['Connection point EAN'] == EAN].groupby(
+        pd.Grouper(freq='D')).count()[['PTE (15min)']].rename(
+        columns={'PTE (15min)': 'recieved'})
+    time_combined['expected'] = 96 # Number of PTU's each day
+
+    fig = plt.figure(figsize=[12.8, 4])
+    plt.plot(time_combined.index, time_combined.recieved, color='b', label='recieved')
+    plt.plot(time_combined.index, time_combined.expected, color='g', label='expected')
+    plt.xticks(rotation=45)
+
+    plt.xlabel('Time')
+    plt.ylabel("Numer of PTU's")
+    plt.legend()
+    fig.tight_layout()
+    plt.savefig(reports_output_folder + '/figures/completeness_time_month_{}_{}.png'.format(EAN, mp))
+
+
 def dist_errors(df_month_party, reports_output_folder):
     fig = plt.figure(figsize=[12.8, 4])
 
@@ -274,8 +337,10 @@ def five_conn_rMAE(df_temp, reports_output_folder):
     plt.close('all')
 
 
+
+
 def MAE_marketparty_month(df_month_party, reports_output_folder):
-    df_temp = df_month_party.groupby(['Business day']).mean()
+    df_temp = df_month_party.groupby(df_month_party.index).mean()
     fig = plt.figure()
     ax1 = plt.axes()
     ax1.plot(df_temp['ABS Error (DA)'].dropna(), label='DA', marker='o', color='b')
@@ -301,7 +366,7 @@ def MAE_marketparty_month(df_month_party, reports_output_folder):
 
 
 def rMAE_marketparty_month(df_month_party, reports_output_folder):
-    df_temp = df_month_party.groupby(['Business day']).mean()
+    df_temp = df_month_party.groupby(df_month_party.index).mean()
     fig = plt.figure()
     ax1 = plt.axes()
     ax1.plot(df_temp['relative ABS Error (DA)'].dropna(),
@@ -329,7 +394,7 @@ def rMAE_marketparty_month(df_month_party, reports_output_folder):
 
 
 def connectionpoint_plot(df_temp, i, reports_output_folder):
-    df_temp_bd = df_temp.groupby(['Business day']).mean()
+    df_temp_bd = df_temp.groupby(df_temp.index).mean()
 
     fig = plt.figure(figsize=[12.8, 4.8])
 
@@ -390,7 +455,7 @@ def plot_year(df, metric, reports_output_folder):
         columnname_id = 'relative ABS Error (ID)'
 
     # assign only the month to the column 'month'
-    df['month'] = df['Business day'].dt.month
+    df['month'] = df.index.month
 
     # group the dataframe by month to get the mean of each month
     df_temp = df.groupby(['month']).mean()

@@ -14,16 +14,16 @@ def make_dataset(month, data_file_location):
     """
 
     # Open the relevant file with all raw data
-    df = pd.read_csv(data_file_location)
+    df = pd.read_csv(data_file_location, parse_dates=True, index_col=0)
 
     # =============================================================================
     # Selecting the month
     # =============================================================================
 
     df['Business day'] = pd.to_datetime(df['Business day'], utc=False)
-
+    df = df.set_index('Business day')
     if month != None:
-        df_month = df[df['Business day'].dt.month == month]
+        df_month = df[df.index.month == month]
     else:
         df_month = df
 
