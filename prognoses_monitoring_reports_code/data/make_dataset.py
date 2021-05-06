@@ -20,7 +20,7 @@ def make_dataset(month, data_file_location):
     # Selecting the month
     # =============================================================================
 
-    df['Business day'] = pd.to_datetime(df['Business day'], utc=False)
+    df['Business day'] = pd.to_datetime(df['Business day'].astype(str) + ' ' + df['PTE Start time'].astype(str), utc=False)
     df = df.set_index('Business day')
     if month != None:
         df_month = df[df.index.month == month]

@@ -273,9 +273,9 @@ def predicted_realised_time_month(df_month, EAN, mp, reports_output_folder):
             ['Realised [MW]', 'Prognosis [MW] (DA)']]
 
     fig = plt.figure(figsize=[12.8, 4])
-    plt.plot(time_combined.index, time_combined['Realised [MW]'], color='b',
+    plt.plot(time_combined.index, time_combined['Realised [MW]'], color='r',
              label='Realised')
-    plt.plot(time_combined.index, time_combined['Prognosis [MW] (DA)'], color='g',
+    plt.plot(time_combined.index, time_combined['Prognosis [MW] (DA)'], color='b',
              label='DA Prognosis')
     plt.xticks(rotation=45)
 
