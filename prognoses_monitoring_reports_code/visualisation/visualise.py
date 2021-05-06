@@ -1,7 +1,7 @@
 """
 This module provides the code for visualisations.
 """
-
+from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -196,17 +196,20 @@ def barchart_tennet_rMAE(df_temp, reports_output_folder):
 
 def completeness_plot_month(df_month, reports_output_folder):
 
-
+    df_month['Connection point EAN'] = df_month['Market Party Name'].astype(str) + '_' + df_month[
+        'Connection point EAN'].astype(str)
     completeness = pd.DataFrame(
         df_month.groupby(by='Connection point EAN').count()['PTE (15min)']).rename(
         columns={'PTE (15min)': 'recieved'})
     completeness['expected'] = len(
         pd.date_range(df_month.index.min(), df_month.index.max(), freq='15T'))
 
+
+
     x = np.arange(len(completeness.index))  # the label locations
     width = 0.35  # the width of the bars
     opacity = 0.8
-    fig, ax = plt.subplots(figsize=[12.8, 4])
+    fig, ax = plt.subplots(figsize=[12.8, 5])
     rects1 = ax.bar(x - width / 2, completeness.recieved.to_list(), width,
                     alpha=opacity,
                     color='b',
@@ -253,9 +256,42 @@ def completeness_time_month(df_month, EAN, mp, reports_output_folder):
     plt.xlabel('Time')
     plt.ylabel("Numer of PTU's")
     plt.legend()
+    month = df_month.index.to_pydatetime()[0].month
+    year = df_month.index.to_pydatetime()[0].year
+    start = datetime(year, month, 1)
+    # get close to the end of the month for any day, and add 4 days 'over'
+    next_month = start.replace(day=28) + timedelta(days=4)
+    # subtract the number of remaining 'overage' days to get last day of current month, or said programattically said, the previous day of the first of next month
+    end = next_month - timedelta(days=next_month.day)
+    plt.xlim(start, end)
     fig.tight_layout()
     plt.savefig(reports_output_folder + '/figures/completeness_time_month_{}_{}.png'.format(EAN, mp))
 
+def predicted_realised_time_month(df_month, EAN, mp, reports_output_folder):
+    time_combined = \
+        df_month[df_month['Connection point EAN'] == EAN][
+            ['Realised [MW]', 'Prognosis [MW] (DA)']]
+
+    fig = plt.figure(figsize=[12.8, 4])
+    plt.plot(time_combined.index, time_combined['Realised [MW]'], color='b',
+             label='Realised')
+    plt.plot(time_combined.index, time_combined['Prognosis [MW] (DA)'], color='g',
+             label='DA Prognosis')
+    plt.xticks(rotation=45)
+
+    plt.xlabel('Time')
+    plt.ylabel("power [MW]")
+    plt.legend()
+    month = df_month.index.to_pydatetime()[0].month
+    year = df_month.index.to_pydatetime()[0].year
+    start = datetime(year, month, 1)
+    # get close to the end of the month for any day, and add 4 days 'over'
+    next_month = start.replace(day=28) + timedelta(days=4)
+    # subtract the number of remaining 'overage' days to get last day of current month
+    end = next_month - timedelta(days=next_month.day)
+    plt.xlim(start, end)
+    fig.tight_layout()
+    plt.savefig(reports_output_folder + '/figures/predicted_realized_time_month_{}_{}.png'.format(EAN, mp))
 
 def dist_errors(df_month_party, reports_output_folder):
     fig = plt.figure(figsize=[12.8, 4])

@@ -5,7 +5,7 @@ Created on Thu Oct  1 09:36:32 2020
 @author: 104091
 """
 
-from prognoses_monitoring_reports_code.visualisation.visualise import completeness_plot_month, completeness_time_month, barchart_marketparty_MAE, barchart_marketparty_rMAE, dist_errors, five_conn_MAE, five_conn_rMAE, MAE_marketparty_month, rMAE_marketparty_month, connectionpoint_plot, plot_year, barchart_tennet_MAE, barchart_tennet_rMAE
+from prognoses_monitoring_reports_code.visualisation.visualise import completeness_plot_month, predicted_realised_time_month, completeness_time_month, barchart_marketparty_MAE, barchart_marketparty_rMAE, dist_errors, five_conn_MAE, five_conn_rMAE, MAE_marketparty_month, rMAE_marketparty_month, connectionpoint_plot, plot_year, barchart_tennet_MAE, barchart_tennet_rMAE
 from prognoses_monitoring_reports_code.pdf.create_pdf import create_pdf, create_pdf_general_month, create_pdf_general_year, create_pdf_tennet_month, create_pdf_tennet_year, create_pdf_tennet_wind_month, create_pdf_tennet_wind_year
 
 
@@ -90,6 +90,8 @@ def generate_report_marketparty_month(df_month, market_party, month, reports_out
             # =============================================================================
 
             completeness_time_month(df_month_party, list_conn[i], mp ,reports_output_folder)
+
+            predicted_realised_time_month(df_month_party, list_conn[i], mp ,reports_output_folder)
 
         # =============================================================================
         # Generate the PDF report including all the plots
@@ -206,7 +208,7 @@ def generate_report_internal_month(df_month, month, reports_output_folder):
     # =============================================================================
     # Plot the distribution of errors
     # =============================================================================
-    dist_errors(df_month)
+    dist_errors(df_month, reports_output_folder)
 
     # =============================================================================
     # PLOT the MAE and rMAE during the month for both the ID and DA

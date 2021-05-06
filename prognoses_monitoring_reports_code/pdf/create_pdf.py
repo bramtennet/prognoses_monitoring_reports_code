@@ -52,7 +52,9 @@ def create_pdf(month, mp, list_conn, conn_dict, reports_output_folder):
         pdf.image(reports_output_folder + '/figures/connectionpoint_'+str(i) +
                   '.png', x=10, y=None, w=180, h=0, type='', link='')
         pdf.image(reports_output_folder + f'/figures/completeness_time_month_{list_conn[i]}_{mp}.png', x=10, y=None, w=180, h=0, type='', link='')
-
+        pdf.image(
+            reports_output_folder + f'/figures/predicted_realized_time_month_{list_conn[i]}_{mp}.png',
+            x=10, y=None, w=180, h=0, type='', link='')
         pdf.add_page()
 
     pdf.output(reports_output_folder + '/prognosis_report_'+str(slugify(mp)) +
@@ -113,7 +115,7 @@ def create_pdf_general_year(reports_output_folder):
     pdf.output(reports_output_folder + '/general_prognosis_report_2020.pdf', 'F')
 
 
-def create_pdf_tennet_month(month):
+def create_pdf_tennet_month(month, reports_output_folder):
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
     pdf.set_xy(0, 0)
