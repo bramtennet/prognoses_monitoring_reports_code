@@ -5,7 +5,7 @@ Created on Thu Oct  1 09:36:32 2020
 @author: 104091
 """
 
-from prognoses_monitoring_reports_code.visualisation.visualise import barchart_marketparty_MAE, barchart_marketparty_rMAE, dist_errors, five_conn_MAE, five_conn_rMAE, MAE_marketparty_month, rMAE_marketparty_month, connectionpoint_plot, plot_year, barchart_tennet_MAE, barchart_tennet_rMAE
+from prognoses_monitoring_reports_code.visualisation.visualise import completeness_plot_month, predicted_realised_time_month, completeness_time_month, barchart_marketparty_MAE, barchart_marketparty_rMAE, dist_errors, five_conn_MAE, five_conn_rMAE, MAE_marketparty_month, rMAE_marketparty_month, connectionpoint_plot, plot_year, barchart_tennet_MAE, barchart_tennet_rMAE
 from prognoses_monitoring_reports_code.pdf.create_pdf import create_pdf, create_pdf_general_month, create_pdf_general_year, create_pdf_tennet_month, create_pdf_tennet_year, create_pdf_tennet_wind_month, create_pdf_tennet_wind_year
 
 
@@ -52,6 +52,7 @@ def generate_report_marketparty_month(df_month, market_party, month, reports_out
         # =============================================================================
         dist_errors(df_month_party, reports_output_folder)
 
+
         # =============================================================================
         # Plot the MAE and rMAE of the five connection points with the highest MAE and rMAE
         # =============================================================================
@@ -84,7 +85,15 @@ def generate_report_marketparty_month(df_month, market_party, month, reports_out
             # make a plot for the connection point
             connectionpoint_plot(df_temp, i, reports_output_folder)
 
-       # =============================================================================
+            # =============================================================================
+            # Plot the completeness for each day
+            # =============================================================================
+
+            completeness_time_month(df_month_party, list_conn[i], mp ,reports_output_folder)
+
+            predicted_realised_time_month(df_month_party, list_conn[i], mp ,reports_output_folder)
+
+        # =============================================================================
         # Generate the PDF report including all the plots
         # =============================================================================
         conn_dict = dict(
@@ -172,6 +181,7 @@ def generate_report_general_year(df, reports_output_folder):
     create_pdf_general_year()
 
 
+
 def generate_report_internal_month(df_month, month, reports_output_folder):
     """This function generates a comparison report for all market parties for a specific month with visible names(intended for internal use only)
 
@@ -205,6 +215,11 @@ def generate_report_internal_month(df_month, month, reports_output_folder):
     # =============================================================================
     MAE_marketparty_month(df_month, reports_output_folder)
     rMAE_marketparty_month(df_month, reports_output_folder)
+
+    # =============================================================================
+    # PLOT the completeness of the recieved forecasts
+    # =============================================================================
+    completeness_plot_month(df_month, reports_output_folder)
 
     # =============================================================================
     # Generate the PDF report including all the plots

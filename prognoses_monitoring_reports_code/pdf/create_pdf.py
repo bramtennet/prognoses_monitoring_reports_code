@@ -51,8 +51,11 @@ def create_pdf(month, mp, list_conn, conn_dict, reports_output_folder):
                  str(conn_dict[list_conn[i]]), 0, 2)
         pdf.image(reports_output_folder + '/figures/connectionpoint_'+str(i) +
                   '.png', x=10, y=None, w=180, h=0, type='', link='')
-        if (((i+1) % 3 == 0) and (i != range(len(list_conn))[-1])):
-            pdf.add_page()
+        pdf.image(reports_output_folder + f'/figures/completeness_time_month_{list_conn[i]}_{mp}.png', x=10, y=None, w=180, h=0, type='', link='')
+        pdf.image(
+            reports_output_folder + f'/figures/predicted_realized_time_month_{list_conn[i]}_{mp}.png',
+            x=10, y=None, w=180, h=0, type='', link='')
+        pdf.add_page()
 
     pdf.output(reports_output_folder + '/prognosis_report_'+str(slugify(mp)) +
                '_2020_'+str('{:02}'.format(month))+'.pdf', 'F')
@@ -135,6 +138,8 @@ def create_pdf_tennet_month(month, reports_output_folder):
               x=105, y=102, w=90, h=0, type='', link='')
     pdf.image(reports_output_folder + '/figures/dist_errors.png',
               x=10, y=160, w=180, h=0, type='', link='')
+    pdf.image(reports_output_folder + '/figures/completeness_month.png',
+              x=10, y=220, w=180, h=0, type='', link='')
 
     pdf.output(reports_output_folder + '/tennet_internal_prognosis_report_2020_' +
                str('{:02}'.format(month))+'.pdf', 'F')
