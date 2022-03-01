@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2017-2022 Contributors to the prognoses_monitoring_reports_code project
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue,
