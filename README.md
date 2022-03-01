@@ -16,6 +16,9 @@ Functionality in this package can be used by importing the package `prognoses_mo
 
 Alternatively you can run `main_script.py` for an example report for dummy data.
 
+# License
+This project is licensed under the Apache License 2.0 - see [LICENSE](LICENSE) for details.
+
 ## Contributing
 
 Please read [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for details on the process for submitting pull requests to us.
