@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2017-2022 Contributors to the prognoses_monitoring_reports_code project
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # prognosis monitoring report code
 
 This package provides functionality to asses prognoses quality of transport prognoses in the Dutch energy sector.
@@ -16,9 +22,12 @@ Functionality in this package can be used by importing the package `prognoses_mo
 
 Alternatively you can run `main_script.py` for an example report for dummy data.
 
+# License
+This project is licensed under the Apache License 2.0 - see [LICENSE](LICENSE) for details.
+
 ## Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for details on the process for submitting pull requests to us.
 
 ## Contact
 
