@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2017-2022 Contributors to the prognoses_monitoring_reports_code project
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # prognosis monitoring report code
 
 This package provides functionality to asses prognoses quality of transport prognoses in the Dutch energy sector.
