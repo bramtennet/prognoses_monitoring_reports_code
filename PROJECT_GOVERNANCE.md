@@ -1,32 +1,12 @@
 <!--
-SPDX-FileCopyrightText: 2017-2021 Contributors to the OpenSTEF project <korte.termijn.prognoses@alliander.com>
+SPDX-FileCopyrightText: 2017-2021 Contributors to the prognoses_monitoring_reports_code project
 
-SPDX-License-Identifier: MPL-2.0
+SPDX-License-Identifier: Apache-2.0
 -->
 
 # Project Governance
 
-The basic principle is that decisions are based on consensus. If this decision making process takes too long or a decision is required, the Technical Steering committee has the authority to make a decision.
-
-## Technical Steering Committee
-
-The Technical Steering Committee (TSC) is responsible for:
-
-1. General ambitions, objectives and goals of this project
-1. Guidelines and procedures and tool selection
-1. Architectural and (development) infrastructure choices
-1. Raise subjects/issues that are important for the direction/development of this project
-
-The community council consists of the following members:
-1. Frank Kreuwel
-1. Jan Maarten van Doorn
-2. Jonas van den Bogaard
-3. David Swinkels
-4. Frederik Stoel
-
-Frank Kreuwel will chair the TSC.
-
-Any community member or Contributor can ask that something be reviewed by the TSC by contacting the TSC at korte.termijn.prognoses@alliander.com.
+The basic principle is that decisions are based on consensus. If this decision making process takes too long or a decision is required, the Maintainers have the authority to make a decision.
 
 ## Maintainers
 
@@ -40,12 +20,10 @@ Maintainers are responsible for maintaining parts of the code-base. Maintainers 
 1. In case of long discussions or arguments, maintainers or other can request a community council decision.
 
 The current maintainers of this project are:
-1. Frank Kreuwel
-2. Jan Maarten van Doorn
-3. David Swinkels
-4. Frederik Stoel
+1. Bram van Vugt (Bram.van.Vugt@tennet.eu )
+2. Jan Maarten van Doorn (jan.maarten.van.doorn@alliander.com)
 
-Any community member or Contributor can ask a question or raise a issue to the maintainers by logging a GitHub issue.
+Any contributor can ask a question or raise a issue to the maintainers by logging a GitHub issue.
 
 ## Contributors
 
