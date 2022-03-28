@@ -37,7 +37,7 @@ def barchart_marketparty_MAE(df_temp, reports_output_folder, mp=None):
             list_index_1.append(a_dictionary[i])
 
     # create plot
-    fig, ax = plt.subplots(figsize=[6.4, 4.8])
+    fig, ax = plt.subplots(figsize=[6.4, 3.5])
     bar_width = 0.35
     opacity = 0.8
 
@@ -102,7 +102,7 @@ def barchart_marketparty_rMAE(df_temp, reports_output_folder, mp=None):
             list_index_1.append(a_dictionary[i])
 
     # create plot
-    fig, ax = plt.subplots(figsize=[6.4, 4.8])
+    fig, ax = plt.subplots(figsize=[6.4, 3.5])
     bar_width = 0.35
     opacity = 0.8
 
@@ -152,7 +152,7 @@ def barchart_tennet_MAE(df_temp, reports_output_folder):
     list_index = list(df_temp.index)
 
     # create plot
-    fig, ax = plt.subplots(figsize=[6.4, 4.8])
+    fig, ax = plt.subplots(figsize=[6.4, 3.5])
     bar_width = 0.35
     opacity = 0.8
 
@@ -196,7 +196,7 @@ def barchart_tennet_rMAE(df_temp, reports_output_folder):
     list_index = list(df_temp.index)
 
     # create plot
-    fig, ax = plt.subplots(figsize=[6.4, 4.8])
+    fig, ax = plt.subplots(figsize=[6.4, 3.5])
     bar_width = 0.35
     opacity = 0.8
     if not df_temp["relative ABS Error (DA)"].isnull().values.all():
@@ -414,24 +414,24 @@ def five_conn_MAE(df_temp, reports_output_folder):
     fig, ax = plt.subplots(figsize=[6.4, 4.8])
     bar_width = 0.35
     opacity = 0.8
-
-    rects1 = plt.bar(
-        index,
-        df_temp_MAE["ABS Error (DA)"],
-        bar_width,
-        alpha=opacity,
-        color="b",
-        label="DA",
-    )
-
-    rects2 = plt.bar(
-        index + bar_width,
-        df_temp_MAE["ABS Error (ID)"],
-        bar_width,
-        alpha=opacity,
-        color="g",
-        label="ID",
-    )
+    if not df_temp_MAE["ABS Error (DA)"].isnull().values.all():
+        rects1 = plt.bar(
+            index,
+            df_temp_MAE["ABS Error (DA)"],
+            bar_width,
+            alpha=opacity,
+            color="b",
+            label="DA",
+        )
+    if not df_temp_MAE["ABS Error (ID)"].isnull().values.all():
+        rects2 = plt.bar(
+            index + bar_width,
+            df_temp_MAE["ABS Error (ID)"],
+            bar_width,
+            alpha=opacity,
+            color="g",
+            label="ID",
+        )
 
     plt.title("Connection points with highest MAE")
     plt.ylabel("MAE [MW]")
