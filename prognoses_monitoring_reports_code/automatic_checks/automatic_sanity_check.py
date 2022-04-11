@@ -56,19 +56,19 @@ def check_if_predicted_is_suspicious(
     if realised.corr(predicted) < -0.5 or (
         (realised - predicted).abs().mean() > (realised + predicted).abs().mean()
     ):
-        report.add_check_failed(reason=f"Polarity probably inverted.")
+        report.add_check_failed(reason=f"Polarity probably inverted")
 
     # Check for extremely large error
     if (realised - predicted).abs().mean() > np.abs(
         (realised.max() - realised.min())
     ) * 0.5:
         report.add_check_failed(
-            reason="Error is larger than half the range of the realised values."
+            reason="Error is larger than half the range of the realised values"
         )
     # Check if predicted mean fall within any of the realised values
     if predicted.mean() > realised.max() or predicted.mean() < realised.min():
         report.add_check_failed(
-            reason="Mean of predicted values is outside range realised."
+            reason="Mean of predicted values is outside range realised"
         )
 
     # Check if the predicted range is not tiny with respect to the realised range
@@ -77,11 +77,11 @@ def check_if_predicted_is_suspicious(
         < np.abs((realised.max() - realised.min())) * 0.5
     ):
         report.add_check_failed(
-            reason="Range of predicted less than half of the range of the realised values."
+            reason="Range of predicted less than half of the range of the realised values"
         )
 
     # Check if predicted consists of a series of zeros
     if (predicted.mean() == 0) and (realised.mean() != 0):
-        report.add_check_failed(reason="Predicted is series of zeros.")
+        report.add_check_failed(reason="Predicted is series of zeros")
 
     return report
