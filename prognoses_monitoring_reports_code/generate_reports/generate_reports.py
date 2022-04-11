@@ -4,6 +4,7 @@ Created on Thu Oct  1 09:36:32 2020
 
 @author: 104091
 """
+import pandas as pd
 
 from prognoses_monitoring_reports_code.visualisation.visualise import (
     completeness_plot_month,
@@ -21,6 +22,9 @@ from prognoses_monitoring_reports_code.visualisation.visualise import (
     barchart_tennet_MAE,
     barchart_tennet_rMAE,
 )
+from prognoses_monitoring_reports_code.automatic_checks.automatic_sanity_check import (
+    automatic_check_forecast_da,
+)
 from prognoses_monitoring_reports_code.pdf.create_pdf import (
     create_pdf,
     create_pdf_general_month,
@@ -33,7 +37,13 @@ from prognoses_monitoring_reports_code.pdf.create_pdf import (
 
 
 def generate_report_marketparty_month(
-    year, df_month, market_party, month, reports_output_folder, missing_eans_per_pv=None
+    year,
+    df_month,
+    market_party,
+    month,
+    reports_output_folder,
+    pvdata=None,
+    missing_eans_per_pv=None,
 ):
     """This function generates a report of an individual market party (if indicated) or reports for all market parties (if market_party = None) for a specific month
 
@@ -42,7 +52,7 @@ def generate_report_marketparty_month(
     df_month(df)         Dataframe of the indicated month
     month(int) :         An Integer which represent the month you would like to generate the report for (all months are now in 2020, januari = 1 etc.)
     market_party(str):   String which defines the name of the market party you want to create the report for, Indicate None if you want to generate reports for all market parties
-
+    pvdata (pd.Dataframe): With information linking the eans to the Programma Verantwoordlijke (PV).
     Returns:
     The function returns no variables
 
@@ -98,7 +108,7 @@ def generate_report_marketparty_month(
         # And add the error distribution of this same connection point to the plot
         # =============================================================================
         list_conn = df_month_party["Connection point Name"].unique()
-
+        connection_points_poor_quality = []
         for i in range(len(list_conn)):
             print("Processing: " + str(mp) + " : " + str(list_conn[i]))
 
@@ -122,6 +132,35 @@ def generate_report_marketparty_month(
                 df_month_party, list_conn[i], mp, reports_output_folder
             )
 
+            report_da = automatic_check_forecast_da(df_month_party, list_conn[i])
+            if report_da.something_wrong:
+                print(
+                    "Found suspicious prediction: "
+                    + str(mp)
+                    + " : "
+                    + str(list_conn[i])
+                )
+                connection_points_poor_quality.append(report_da)
+
+        # Combine reports with pv data into a table
+        faulty_eans = {
+            str(report.ean): ", \n".join(report.reasons)
+            for report in connection_points_poor_quality
+        }
+
+        if pvdata is not None:
+            poor_quality_ean_per_pv = pvdata[pvdata["EANCODE"].isin(faulty_eans.keys())]
+            poor_quality_ean_per_pv = (
+                poor_quality_ean_per_pv.set_index("EANCODE")
+                .merge(
+                    pd.Series(faulty_eans, index=faulty_eans.keys()).rename("REASON"),
+                    left_index=True,
+                    right_index=True,
+                )
+                .reset_index()
+                .rename(columns={"index": "EANCODE"})
+            )
+
         # =============================================================================
         # Generate the PDF report including all the plots
         # =============================================================================
@@ -140,6 +179,7 @@ def generate_report_marketparty_month(
             conn_dict,
             reports_output_folder,
             missing_eans_per_pv=missing_eans_per_pv,
+            poor_quality_ean_per_pv=poor_quality_ean_per_pv,
         )
 
 
