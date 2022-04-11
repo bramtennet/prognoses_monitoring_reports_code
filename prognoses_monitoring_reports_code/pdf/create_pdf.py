@@ -247,7 +247,7 @@ def create_pdf(
                 pdf.cell(
                     75,
                     10,
-                    " Forecast sanity check failed because of the following reason(s): ",
+                    "Simple forecast sanity check failed because of the following reason(s): ",
                     0,
                     2,
                 )
@@ -255,7 +255,7 @@ def create_pdf(
                 pdf.multi_cell(200, 5, "".join(reason))
             else:
                 pdf.set_font("arial", "B", 8)
-                pdf.cell(75, 10, " Forecast sanity check! ", 0, 2)
+                pdf.cell(75, 10, "Simple forecast sanity check passed! ", 0, 2)
 
         pdf.add_page()
 
