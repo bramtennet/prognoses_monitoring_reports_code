@@ -20,6 +20,7 @@ def create_pdf(
     conn_dict,
     reports_output_folder,
     missing_eans_per_pv=None,
+    poor_quality_ean_per_pv=None,
 ):
     pdf = FPDF("P", "mm", "A4")
 
@@ -60,6 +61,52 @@ def create_pdf(
             pdf.ln(th)
             pdf.set_font("arial", "", 9)
             for row_index, row in missing_eans_for_pv.iterrows():
+                pdf.cell(col_width, th, format(row["EANCODE"]), border=1)
+                pdf.cell(1.7 * col_width, th, format(row["PV_NAAM"]), border=1)
+                pdf.cell(0.3 * col_width, th, format(row["AANSLUITWAARDE"]), border=1)
+                pdf.cell(col_width, th, format(row["WOONPLAATS"]), border=1)
+                pdf.cell(col_width, th, format(row["STRAATNAAM"]), border=1)
+                pdf.ln(th)
+            pdf.ln(1)
+        except KeyError:
+            print(
+                f"Marketparty: {mp} not in list of missing EAN's, skipping table of missing EAN's"
+            )
+
+    if poor_quality_ean_per_pv is not None:
+
+        try:
+
+            print(len(poor_quality_ean_per_pv))
+            pdf.add_page()
+            pdf.set_xy(0, 0)
+            pdf.set_font("arial", "B", 16)
+            pdf.cell(90, 10, " ", 0, 2, "C")
+            pdf.cell(10)
+            pdf.cell(
+                75,
+                10,
+                "EANs for which forecast quality is insufficient "
+                + str(calendar.month_name[month])
+                + f" {year}",
+                0,
+                2,
+            )
+            pdf.set_font("arial", "B", 10)
+
+            page_width = pdf.w - 2 * pdf.l_margin
+            col_width = page_width / 5
+
+            pdf.ln(1)
+            th = pdf.font_size
+            pdf.cell(col_width, th, poor_quality_ean_per_pv.columns[0], border=1)
+            pdf.cell(col_width, th, poor_quality_ean_per_pv.columns[1], border=1)
+            pdf.cell(col_width, th, poor_quality_ean_per_pv.columns[2], border=1)
+            pdf.cell(col_width, th, poor_quality_ean_per_pv.columns[3], border=1)
+            pdf.cell(col_width, th, poor_quality_ean_per_pv.columns[4], border=1)
+            pdf.ln(th)
+            pdf.set_font("arial", "", 9)
+            for row_index, row in poor_quality_ean_per_pv.iterrows():
                 pdf.cell(col_width, th, format(row["EANCODE"]), border=1)
                 pdf.cell(1.7 * col_width, th, format(row["PV_NAAM"]), border=1)
                 pdf.cell(0.3 * col_width, th, format(row["AANSLUITWAARDE"]), border=1)
@@ -187,6 +234,29 @@ def create_pdf(
             type="",
             link="",
         )
+        if poor_quality_ean_per_pv is not None:
+            reason = poor_quality_ean_per_pv[
+                poor_quality_ean_per_pv["EANCODE"] == str(list_conn[i])
+            ]["REASON"]
+            print(poor_quality_ean_per_pv)
+
+            if len(reason) > 0:
+                print("".join(reason))
+                # Output justified text
+                pdf.set_font("arial", "B", 8)
+                pdf.cell(
+                    75,
+                    10,
+                    " Forecast sanity check failed because of the following reason(s): ",
+                    0,
+                    2,
+                )
+                pdf.set_font("arial", "", 8)
+                pdf.multi_cell(200, 5, "".join(reason))
+            else:
+                pdf.set_font("arial", "B", 8)
+                pdf.cell(75, 10, " Forecast sanity check! ", 0, 2)
+
         pdf.add_page()
 
     pdf.output(

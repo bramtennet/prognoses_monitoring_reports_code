@@ -24,6 +24,7 @@ def main(
     month=8,
     market_party=None,
     missing_eans_per_pv=None,
+    pvdata=None,
     report_type="marketparty_month",
     data_file_location="../data/dummy_data.csv",
     reports_output_folder="../reports",
@@ -68,6 +69,7 @@ def main(
                 market_party,
                 month,
                 reports_output_folder,
+                pvdata,
                 missing_eans_per_pv,
             )
         else:
