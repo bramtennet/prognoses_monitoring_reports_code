@@ -253,9 +253,6 @@ def create_pdf(
                 )
                 pdf.set_font("arial", "", 8)
                 pdf.multi_cell(200, 5, "".join(reason))
-            else:
-                pdf.set_font("arial", "B", 8)
-                pdf.cell(75, 10, "Simple forecast sanity check passed! ", 0, 2)
 
         pdf.add_page()
 

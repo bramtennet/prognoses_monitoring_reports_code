@@ -52,7 +52,7 @@ def generate_report_marketparty_month(
     df_month(df)         Dataframe of the indicated month
     month(int) :         An Integer which represent the month you would like to generate the report for (all months are now in 2020, januari = 1 etc.)
     market_party(str):   String which defines the name of the market party you want to create the report for, Indicate None if you want to generate reports for all market parties
-
+    pvdata (pd.Dataframe): With information linking the eans to the Programma Verantwoordlijke (PV).
     Returns:
     The function returns no variables
 
@@ -134,6 +134,12 @@ def generate_report_marketparty_month(
 
             report_da = automatic_check_forecast_da(df_month_party, list_conn[i])
             if report_da.something_wrong:
+                print(
+                    "Found suspicious prediction: "
+                    + str(mp)
+                    + " : "
+                    + str(list_conn[i])
+                )
                 connection_points_poor_quality.append(report_da)
 
         # Combine reports with pv data into a table
