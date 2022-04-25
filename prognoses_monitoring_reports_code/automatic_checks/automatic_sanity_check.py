@@ -95,6 +95,16 @@ def check_if_predicted_is_suspicious(
 def check_quality_sufficient(
     realised: pd.Series, predicted: pd.Series, ean: int
 ) -> CheckReport:
+    """Simple function to check the content of t-forecasts for e certain minimal quality
+
+    Args:
+        realised: realised values
+        predicted: predicted value
+        ean: ean of specific connection
+
+    Returns: Checkreport object that indicates if any checks failed and for what reason.
+
+    """
 
     # Initialize report
     report = CheckReport(ean)
