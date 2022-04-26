@@ -1,5 +1,10 @@
 import pandas as pd
 import numpy as np
+import openstef.metrics.metrics as metrics
+
+
+MINIMAL_R_MAE: float = 0.15
+MINIMAL_SKILL_SCORE: float = 0.6
 
 
 class CheckReport:
@@ -83,5 +88,58 @@ def check_if_predicted_is_suspicious(
     # Check if predicted consists of a series of zeros
     if (predicted.mean() == 0) and (realised.mean() != 0):
         report.add_check_failed(reason="Predicted is series of zeros")
+
+    return report
+
+
+def check_quality_sufficient(
+    realised: pd.Series, predicted: pd.Series, ean: int
+) -> CheckReport:
+    """Simple function to check the content of t-forecasts for a certain minimal quality
+
+    Args:
+        realised: realised values
+        predicted: predicted value
+        ean: ean of specific connection
+
+    Returns: Checkreport object that indicates if any checks failed and for what reason.
+
+    """
+
+    # Initialize report
+    report = CheckReport(ean)
+
+    # Format data to fit the metric functions in openSTEF
+    realised = realised.rename("load")
+
+    # Create a basecase forecast by shifting the realised load 7 days (7*96 PTU's)
+    basecase = realised.copy(deep=True).rename("basecase")
+    basecase.index = basecase.index - (7 * 96)
+
+    # Combine everything and perform an "inner" join as we do not have a basecase for the first week
+    combined = pd.concat(
+        [realised, predicted.rename("predicted"), basecase], axis=1, join="inner"
+    ).dropna()
+
+    # Calucaltate metrics
+    skill_score = metrics.skill_score(
+        combined["load"], combined["predicted"], combined["basecase"]
+    )
+    skill_score_positive_peaks = metrics.skill_score_positive_peaks(
+        combined["load"], combined["predicted"], combined["basecase"]
+    )
+    r_mae = metrics.r_mae(combined["load"], combined["predicted"])
+
+    # Cary out checks on calculated metrics
+    if r_mae > MINIMAL_R_MAE:
+        report.add_check_failed(reason="rMAE below 15%")
+
+    if (
+        skill_score < MINIMAL_SKILL_SCORE
+        and skill_score_positive_peaks < MINIMAL_SKILL_SCORE
+    ):
+        report.add_check_failed(
+            reason="Skill score or Skill score positive peaks bellow 0.6"
+        )
 
     return report

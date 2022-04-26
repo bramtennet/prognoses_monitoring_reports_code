@@ -3,6 +3,7 @@ import pandas as pd
 
 from prognoses_monitoring_reports_code.automatic_checks.automatic_sanity_check import (
     check_if_predicted_is_suspicious,
+    check_quality_sufficient,
 )
 
 
@@ -10,7 +11,7 @@ class TestAutomaticSanityChecks(unittest.TestCase):
     def setUp(self) -> None:
         pass
 
-    def test_passeble(self):
+    def test_passable(self):
         # Arrange
         ean = 123
         predicted = pd.DataFrame(
@@ -84,6 +85,63 @@ class TestAutomaticSanityChecks(unittest.TestCase):
 
         # Act
         report = check_if_predicted_is_suspicious(
+            predicted["realised"], predicted["predicted"], ean
+        )
+
+        # Assert
+        assert report.something_wrong == True
+        assert report.ean == ean
+        assert report.reasons == expected_reasons
+
+    def test_quality_passable(self):
+        # Arrange
+        ean = 123
+        predicted = pd.DataFrame(
+            data={"predicted": range(1000), "realised": range(1000)}
+        )
+        expected_reasons = []
+
+        # Act
+        report = check_quality_sufficient(
+            predicted["realised"], predicted["predicted"], ean
+        )
+
+        # Assert
+        assert report.something_wrong == False
+        assert report.ean == ean
+        assert report.reasons == expected_reasons
+
+    def test_quality_r_mae_too_high(self):
+        # Arrange
+        ean = 123
+        predicted = pd.DataFrame(
+            data={"predicted": range(1000), "realised": [i * 2 for i in range(1000)]}
+        )
+        expected_reasons = ["rMAE below 15%"]
+
+        # Act
+        report = check_quality_sufficient(
+            predicted["realised"], predicted["predicted"], ean
+        )
+
+        # Assert
+        assert report.something_wrong == True
+        assert report.ean == ean
+        assert report.reasons == expected_reasons
+
+    def test_quality_skill_score_too_low(self):
+        # Arrange
+        ean = 123
+        predicted = pd.DataFrame(
+            data={
+                "predicted": [i * 0 for i in range(1000)],
+                "realised": [1 for i in range(1000)],
+            }
+        )
+        expected_reasons = ["Skill score or Skill score positive peaks bellow 0.6"]
+
+        # Act
+        report = check_quality_sufficient(
             predicted["realised"], predicted["predicted"], ean
         )
 
